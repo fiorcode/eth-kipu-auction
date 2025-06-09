@@ -6,6 +6,11 @@ contract EthKipuAuction {
     address public owner; // Owner
     uint256 public endAuctionDate; // Tentative completion date.
 
+    struct Bid {
+        address bidder;
+        uint value;
+    }
+
     mapping(address => uint256) private _bidsBalances; // Total amount of bids for each address.
     Bid private _highestBid; // Actual highest bid.
     Bid[] private _bids; // All bids receive.
@@ -13,13 +18,13 @@ contract EthKipuAuction {
 
     constructor() {
         owner = msg.sender; // Set the deployer as owner of the contract.
-        endAuctionDate = block.timestamp + 8 hours; // Set the tentative completion date.
+        endAuctionDate = block.timestamp + 7 days; // Set the tentative completion date.
         _highestBid = Bid(address(this), BASE_BID); // Sets an initial bid to start.
     }
     
-    // ===========================================================================================
-    // MODIFIERS
-    // ===========================================================================================
+    /**
+     * MODIFIERS
+     */
 
     /**
      * @dev Allows access to contract owner only.
@@ -55,9 +60,9 @@ contract EthKipuAuction {
         _;
     }
 
-    // ===========================================================================================
-    // PUBLIC FUNCTIONS
-    // ===========================================================================================
+    /**
+     * PUBLIC FUNCTIONS
+     */
 
     /**
     * @dev Function to receive bids.
@@ -163,9 +168,9 @@ contract EthKipuAuction {
         return _highestBid;
     }
 
-    // ===========================================================================================
-    // EVENTS
-    // ===========================================================================================
+    /**
+     * EVENTS
+     */
 
     /**
      * @dev Issued when a new valid offer is made.
@@ -184,17 +189,11 @@ contract EthKipuAuction {
     event AuctionFinished(string message);
 
 
-    // ===========================================================================================
-    // CONSTANTS
-    // ===========================================================================================
-
+    /**
+     * CONSTANTS
+     */
     uint256 constant private BASE_BID = 100000 gwei;
     uint256 constant private MIN_BID_INCREMENT_PERCENTAGE = 5; 
     uint256 constant private BID_EXTENSION_TIME = 10 minutes; 
     uint256 constant private COMMISSION_PERCENTAGE = 2; 
-}
-
-struct Bid {
-    address bidder;
-    uint value;
 }
